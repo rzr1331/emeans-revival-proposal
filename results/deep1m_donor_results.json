@@ -1,0 +1,68 @@
+[
+ {
+  "seed": 10,
+  "epochs": 3,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.38727600723773653,
+  "train_mse": 0.3600575791379151,
+  "splits": 6511,
+  "tiny": 28,
+  "imbalance": 1.21320800256,
+  "seconds": 366.44807863235474
+ },
+ {
+  "seed": 11,
+  "epochs": 3,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.3865358428229282,
+  "train_mse": 0.36003794465561184,
+  "splits": 6482,
+  "tiny": 26,
+  "imbalance": 1.211361001472,
+  "seconds": 290.9631564617157
+ },
+ {
+  "seed": 12,
+  "epochs": 3,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.3872729280046231,
+  "train_mse": 0.3600115535176121,
+  "splits": 6426,
+  "tiny": 29,
+  "imbalance": 1.210927808512,
+  "seconds": 218.95165753364563
+ },
+ {
+  "seed": 10,
+  "epochs": 5,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.38625952068611014,
+  "train_mse": 0.35776555416818634,
+  "splits": 6994,
+  "tiny": 11,
+  "imbalance": 1.214587895808,
+  "seconds": 785.0305330753326
+ },
+ {
+  "seed": 11,
+  "epochs": 5,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.38640159963281673,
+  "train_mse": 0.3577506211307333,
+  "splits": 6980,
+  "tiny": 15,
+  "imbalance": 1.210166607872,
+  "seconds": 478.5678541660309
+ },
+ {
+  "seed": 12,
+  "epochs": 5,
+  "rule": "mass + donor SSE",
+  "test_mse": 0.3862905977841747,
+  "train_mse": 0.3577523842653087,
+  "splits": 6903,
+  "tiny": 13,
+  "imbalance": 1.207713497088,
+  "seconds": 368.3597979545593
+ }
+]

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+*.fbin.part
+results/results_quick.md
+results/runs_quick.json
