@@ -4,6 +4,9 @@ A reproducible report on the dead-cluster revival step in E-Means (Bessa et al.,
 outperforming k-means (in one-tenth the epochs)", arXiv:2611.09501; `faiss/contrib/e_means`),
 with a candidate opt-in rule, evaluated on the unmodified reference code.
 
+- Issue: https://github.com/facebookresearch/faiss/issues/5907
+- Draft PR with the rule as `revival="separation"` / `"auto"`: https://github.com/facebookresearch/faiss/pull/5908
+
 Everything runs Meta's `NumpyEmeans` (float32, `faiss.knn` assignment). The reference files are
 vendored unmodified in `third_party/` (faiss commit `2b648f06`, MIT licence).
 
@@ -28,7 +31,8 @@ Revival treats a centroid with mass below 0.1x the mean as dead. With k=8 that i
   clusters (k = 8-256) of unequal size. The paper's Appendix D already covers high n/k and Zipf
   mixtures on MSE; what is new here is the destructive effect on small clusters at low k.
 - faiss PR #5854 (9 Nov 2026) switched revival off for d <= 2. The cases here are at d = 8-32 and
-  depend on cluster structure, not dimension. As of 11 Nov 2026 we found no faiss issue on this.
+  depend on cluster structure, not dimension. Reported as faiss issue #5907
+  on 12 Nov 2026.
 - The settings were built to expose the mechanism (well-separated components, a rare component
   near the threshold, k equal to the number of components). They are regression cases; the pooled
   rates below do not estimate how often this happens on data in general.
@@ -68,8 +72,10 @@ lowers training MSE but is not evidence that they are meaningful groups.
 ## Candidate rule
 
 `emeans_plus.py` subclasses `NumpyEmeans` and changes only the revival path. The same three
-changes are implemented in `NumpyEmeans` behind `revival="separation"` on a branch (not yet
-public); `results/results.md` column "separation (3 changes)".
+changes are in faiss PR #5908 as `revival="separation"`, and with the switch below as
+`revival="auto"`. That branch is bit-identical to this implementation (centroids, labels, splits,
+objectives) on 69 runs across 23 settings for each of the two values, and reproduced one DEEP 1M
+seed exactly. `results/results.md`, columns "separation (3 changes)" and "auto".
 
 1. **Separation test.** A low-mass centroid is revived only if the mean over its rows of
    `d2(second nearest) - d2(nearest)` is below the global mean within-cluster squared distance.
@@ -118,8 +124,8 @@ and gains more on the three balanced settings.
 n=1M, k=16,384, test error on the next 10,000 rows (the faiss benchmark's `deep1b-1M` data and k;
 the fixed-budget comparison of the paper's Table 5), seeds 10-12, CPU `NumpyEmeans` (float32,
 NumPy random-row starts; the paper uses BF16 GPU kernels and a CUDA generator, and its held-out
-split is not verified to be the same rows). `repro/run_deep1m.py` needs a faiss whose `contrib.e_means` has the `revival` option (the branch),
-and all three DEEP scripts expect the 388 MB `base.1B.fbin.part` prefix in the working directory.
+split is not verified to be the same rows). `repro/run_deep1m.py` needs a faiss whose
+`contrib.e_means` has the `revival` option (the branch of PR #5908), and all three DEEP scripts expect the 388 MB `base.1B.fbin.part` prefix in the working directory.
 
 | passes | test MSE, defaults | test MSE, separation | difference (range over seeds) | clusters < 10 rows | seconds |
 |---|---|---|---|---|---|
@@ -163,7 +169,8 @@ value, and it has only been tried on the cases below. `results/results.md`, colu
 
 On DEEP 1M the switch is level with the defaults on test MSE (three wins, three losses), slightly
 lower on training MSE, with slightly less even cluster sizes (imbalance 1.21 vs 1.18). It is not
-an improvement on the paper's benchmark. It is in the branch as `revival="auto"` (bit-identical to this implementation on 21 runs).
+an improvement on the paper's benchmark. It is in the branch of PR #5908 as
+`revival="auto"`.
 
 ## Other limits
 
